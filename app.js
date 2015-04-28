@@ -40,11 +40,11 @@ db.once('open', function (callback) {
 //   the user by ID when deserializing.  However, since this example does not
 //   have a database of user records, the complete Instagram profile is
 //   serialized and deserialized.
-passport.serializeUser(function(user, done) {
+passport.serializeUser(function (user, done) {
   done(null, user);
 });
 
-passport.deserializeUser(function(obj, done) {
+passport.deserializeUser(function (obj, done) {
   done(null, obj);
 });
 
@@ -58,25 +58,30 @@ passport.use(new InstagramStrategy({
     clientSecret: INSTAGRAM_CLIENT_SECRET,
     callbackURL: INSTAGRAM_CALLBACK_URL
   },
-  function(accessToken, refreshToken, profile, done) {
+  function (accessToken, refreshToken, profile, done) {
     // asynchronous verification, for effect...
-   models.User.findOne({
-    "ig_id": profile.id
-   }, function(err, user) {
+    models.User.findOne({
+      "ig_id": profile.id,
+      "name": profile.displayName
+        /*"id": profile.id,
+          "access_token": accessToken,
+          "username": profile.username,
+          "provider":profile.provider*/
+    }, function (err, user) {
       if (err) {
-        return done(err); 
+        return done(err);
       }
-      
+
       //didnt find a user
       if (!user) {
         newUser = new models.User({
-          name: profile.username, 
+          name: profile.username,
           ig_id: profile.id,
           ig_access_token: accessToken
         });
 
-        newUser.save(function(err) {
-          if(err) {
+        newUser.save(function (err) {
+          if (err) {
             console.log(err);
           } else {
             console.log('user: ' + newUser.name + " created.");
@@ -95,22 +100,28 @@ passport.use(new InstagramStrategy({
           return done(null, user);
         });
       }
-   });
+    });
   }
 ));
 
 
 //Configures the Template engine
-app.engine('handlebars', handlebars({defaultLayout: 'layout'}));
+app.engine('handlebars', handlebars({
+  defaultLayout: 'layout'
+}));
 app.set('view engine', 'handlebars');
 app.set('views', __dirname + '/views');
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(session({ secret: 'keyboard cat',
-                  saveUninitialized: true,
-                  resave: true}));
+app.use(session({
+  secret: 'keyboard cat',
+  saveUninitialized: true,
+  resave: true
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -123,126 +134,144 @@ app.set('port', process.env.PORT || 3000);
 //   the request will proceed.  Otherwise, the user will be redirected to the
 //   login page.
 function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) { 
-    return next(); 
+  if (req.isAuthenticated()) {
+    return next();
   }
   res.redirect('/login');
 }
 
 
 function ensureAuthenticatedInstagram(req, res, next) {
-  if (req.isAuthenticated() && !!req.user.ig_id) { 
-    return next(); 
+  if (req.isAuthenticated() && !!req.user.ig_id) {
+    return next();
   }
   res.redirect('/login');
 }
 
 
 //routes
-app.get('/', function(req, res){
+app.get('/', function (req, res) {
   res.render('login');
 });
 
-app.get('/login', function(req, res){
-  res.render('login', { user: req.user });
+app.get('/login', function (req, res) {
+  res.render('login', {
+    user: req.user
+  });
 });
 
-app.get('/account', ensureAuthenticated, function(req, res){
-  res.render('account', {user: req.user});
+app.get('/account', ensureAuthenticated, function (req, res) {
+  res.render('account', {
+    user: req.user
+  });
 });
 
-app.get('/igphotos', ensureAuthenticatedInstagram, function(req, res){
-  var query  = models.User.where({ ig_id: req.user.ig_id });
+app.get('/igphotos', ensureAuthenticatedInstagram, function (req, res) {
+  var query = models.User.where({
+    ig_id: req.user.ig_id
+  });
   query.findOne(function (err, user) {
     if (err) return err;
     if (user) {
       // doc may be null if no document matched
       Instagram.users.liked_by_self({
         access_token: user.ig_access_token,
-        complete: function(data) {
+        complete: function (data) {
           console.log(data);
           //Map will iterate through the returned data obj
-          var imageArr = data.map(function(item) {
+          var imageArr = data.map(function (item) {
             //create temporary json object
             tempJSON = {};
             tempJSON.url = item.images.low_resolution.url;
             //insert json object into image array
             return tempJSON;
           });
-          res.render('photos', {photos: imageArr});
+          res.render('photos', {
+            photos: imageArr
+          });
         }
-      }); 
+      });
     }
   });
 });
-
-app.get('/igMediaCounts', ensureAuthenticatedInstagram, function(req, res){
-  var query  = models.User.where({ ig_id: req.user.ig_id });
+//Define the redirect here, ensures authenticated.
+app.get('/igMediaCounts', ensureAuthenticatedInstagram, function (req, res) {
+  var query = models.User.where({
+    ig_id: req.user.ig_id
+  });
   query.findOne(function (err, user) {
     if (err) return err;
+    //If you find a user...
     if (user) {
-      Instagram.users.follows({ 
+      Instagram.users.follows({
+        //define the id of one of current user's "leaders"
         user_id: user.ig_id,
+        //define the token of one of our current user's "leaders" (Should be same)...this isn't even defined in the JSON doe.
         access_token: user.ig_access_token,
-        complete: function(data) {
+        complete: function (data) {
           // an array of asynchronous functions
           var asyncTasks = [];
           var mediaCounts = [];
-           
-          data.forEach(function(item){
-            asyncTasks.push(function(callback){
+
+          data.forEach(function (item) {
+            asyncTasks.push(function (callback) {
               // asynchronous function!
-              Instagram.users.info({ 
-                  user_id: item.id,
-                  access_token: user.ig_access_token,
-                  complete: function(data) {
-                    mediaCounts.push(data);
-                    callback();
-                  }
-                });            
+              //where the hell is this endpoint? WHere is this being pushed?
+              Instagram.users.info({
+                user_id: item.id,
+                access_token: user.ig_access_token,
+                complete: function (data) {
+                  mediaCounts.push(data);
+                  callback();
+                }
+              });
             });
           });
-          
+
           // Now we have an array of functions, each containing an async task
           // Execute all async tasks in the asyncTasks array
-          async.parallel(asyncTasks, function(err){
+          async.parallel(asyncTasks, function (err) {
             // All tasks are done now
             if (err) return err;
-            return res.json({users: mediaCounts});        
+            return res.json({
+              users: mediaCounts
+            });
           });
         }
-      });   
+      });
     }
   });
 });
 
-app.get('/visualization', ensureAuthenticatedInstagram, function (req, res){
+app.get('/visualization', ensureAuthenticatedInstagram, function (req, res) {
   res.render('visualization');
-}); 
+});
 
 
-app.get('/c3visualization', ensureAuthenticatedInstagram, function (req, res){
+app.get('/c3visualization', ensureAuthenticatedInstagram, function (req, res) {
   res.render('c3visualization');
-}); 
+});
 
 app.get('/auth/instagram',
   passport.authenticate('instagram'),
-  function(req, res){
+  function (req, res) {
     // The request will be redirected to Instagram for authentication, so this
     // function will not be called.
   });
 
-app.get('/auth/instagram/callback', 
-  passport.authenticate('instagram', { failureRedirect: '/login'}),
-  function(req, res) {
+app.get('/auth/instagram/callback',
+  passport.authenticate('instagram', {
+    failureRedirect: '/login'
+  }),
+  function (req, res) {
     res.redirect('/account');
   });
 
-app.get('/logout', function(req, res){
+app.get('/logout', function (req, res) {
   req.logout();
   res.redirect('/');
 });
 
-http.createServer(app).listen(app.get('port'), function() {
-    console.log('Express server listening on port ' + app.get('port'));
+http.createServer(app).listen(app.get('port'), function () {
+  console.log('Express server listening on port ' + app.get('port'));
 });
