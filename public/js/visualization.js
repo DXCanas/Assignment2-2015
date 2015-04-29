@@ -91,7 +91,7 @@ d3.json('/igMediaCounts', function (error, data) {
     .attr("height", function (d) {
       return height - scaleY(d.counts.media);
     })
-    rect.on('mouseover', function(d) {
+    .on('mouseover', function(d) {
       tip.show(d)
     })
     .on('mouseout', tip.hide);
