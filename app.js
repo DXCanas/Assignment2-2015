@@ -216,7 +216,7 @@ app.get('/igMediaCounts', ensureAuthenticatedInstagram, function (req, res) {
           data.forEach(function (item) {
             asyncTasks.push(function (callback) {
               // asynchronous function!
-              //where the hell is this endpoint? WHere is this being pushed?
+              //where the hell is this endpoint? Where is this being pushed?
               Instagram.users.info({
                 user_id: item.id,
                 access_token: user.ig_access_token,

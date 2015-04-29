@@ -1,4 +1,11 @@
-var margin = {top: 20, right: 20, bottom: 100, left: 40};
+/*This is where the D# Visualization is defined*/
+
+var margin = {
+  top: 20,
+  right: 20,
+  bottom: 100,
+  left: 40
+};
 var width = 960 - margin.left - margin.right;
 var height = 500 - margin.top - margin.bottom;
 
@@ -27,23 +34,27 @@ var svg = d3.select("body").append("svg")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 //get json object which contains media counts
-d3.json('/igMediaCounts', function(error, data) {
+d3.json('/igMediaCounts', function (error, data) {
   //set domain of x to be all the usernames contained in the data
-  scaleX.domain(data.users.map(function(d) { return d.username; }));
+  scaleX.domain(data.users.map(function (d) {
+    return d.username;
+  }));
   //set domain of y to be from 0 to the maximum media count returned
-  scaleY.domain([0, d3.max(data.users, function(d) { return d.counts.media; })]);
+  scaleY.domain([0, d3.max(data.users, function (d) {
+    return d.counts.media;
+  })]);
 
   //set up x axis
   svg.append("g")
     .attr("class", "x axis")
     .attr("transform", "translate(0," + height + ")") //move x-axis to the bottom
     .call(xAxis)
-    .selectAll("text")  
+    .selectAll("text")
     .style("text-anchor", "end")
     .attr("dx", "-.8em")
     .attr("dy", ".15em")
-    .attr("transform", function(d) {
-      return "rotate(-65)" 
+    .attr("transform", function (d) {
+      return "rotate(-65)"
     });
 
   //set up y axis
@@ -62,8 +73,14 @@ d3.json('/igMediaCounts', function(error, data) {
     .data(data.users)
     .enter().append("rect")
     .attr("class", "bar")
-    .attr("x", function(d) { return scaleX(d.username); })
+    .attr("x", function (d) {
+      return scaleX(d.username);
+    })
     .attr("width", scaleX.rangeBand())
-    .attr("y", function(d) { return scaleY(d.counts.media); })
-    .attr("height", function(d) { return height - scaleY(d.counts.media); });
+    .attr("y", function (d) {
+      return scaleY(d.counts.media);
+    })
+    .attr("height", function (d) {
+      return height - scaleY(d.counts.media);
+    });
 });
