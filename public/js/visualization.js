@@ -33,6 +33,13 @@ var svg = d3.select("body").append("svg")
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+/* Initialize tooltip*/
+var tip = d3.tip().attr('class', 'd3-tip').html(function (d) {
+  return d;
+});
+//This is where the tip is initialized in the scope of our chart
+svg.call(tip);
+
 //get json object which contains media counts
 d3.json('/igMediaCounts', function (error, data) {
   //set domain of x to be all the usernames contained in the data
@@ -73,6 +80,7 @@ d3.json('/igMediaCounts', function (error, data) {
     .data(data.users)
     .enter().append("rect")
     .attr("class", "bar")
+    //here, d is the user... no idea how though
     .attr("x", function (d) {
       return scaleX(d.username);
     })
@@ -82,5 +90,9 @@ d3.json('/igMediaCounts', function (error, data) {
     })
     .attr("height", function (d) {
       return height - scaleY(d.counts.media);
-    });
+    })
+    rect.on('mouseover', function(d) {
+      tip.show(d)
+    })
+    .on('mouseout', tip.hide);
 });
