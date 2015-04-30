@@ -33,11 +33,17 @@ var svg = d3.select("body").append("svg")
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-/* Initialize tooltip*/
+/* Initialize tooltip. The reason d3 knows to call this function on this
+  kind of object is because of the way d3-tip defined the function. you
+  can find this in d3-tip.js in public/js. It's linked in
+  views/layouts/layout.handlebars */
 var tip = d3.tip().attr('class', 'd3-tip').html(function (d) {
   return d;
 });
-//This is where the tip is initialized in the scope of our chart
+/*This is where the tip is initialized in the scope of our chart
+  if this weren't here, our chart (svg) wouldn't know what we're talking
+  about.
+*/
 svg.call(tip);
 
 //get json object which contains media counts
@@ -80,7 +86,9 @@ d3.json('/igMediaCounts', function (error, data) {
     .data(data.users)
     .enter().append("rect")
     .attr("class", "bar")
-    //here, d is the user... no idea how though
+    /*here, d is the user. this works because in app.js, they call
+      this file in the context of the response they get from a facebook
+      authentication response*/
     .attr("x", function (d) {
       return scaleX(d.username);
     })
@@ -91,6 +99,9 @@ d3.json('/igMediaCounts', function (error, data) {
     .attr("height", function (d) {
       return height - scaleY(d.counts.media);
     })
+    /*this is where the tooltip magic happens- we're telling it to use
+    the same data that calculates the height of each bar, but represent it
+    as a number raw number rather than height for an infographic*/
     .on('mouseover', function(d) {
       tip.show(d.counts.media)
     })
