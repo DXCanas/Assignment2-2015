@@ -107,21 +107,19 @@ d3.json('/igMediaCounts', function (error, data) {
     })
     .on('mouseout', tip.hide);
 
-  //sort the bars in order from most to least
+  //sort the bars in order from least to greatest
   d3.select("button").on("click", function () {
     //disables the button after being clicked
     this.disabled = true;
     //if box is checked, sort by media
     var scaleX_sorted = scaleX.domain(data.users.sort(function (a, b) {
-        /*don't know why this calculation works, but it looks like it's
-        setting the domain of the x axis to...0? What are a and b?*/
-        return b.counts.media - a.counts.media;
+        return a.counts.media - b.counts.media;
       })
       .map(function (d) {
         return d.username;
       }));
-    //make use of transition
 
+    //assign the transition to the sort function
     var transition = svg.transition().duration(1500);
     transition.selectAll(".bar")
       .attr("x", function (d) {

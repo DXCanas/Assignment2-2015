@@ -194,7 +194,9 @@ app.get('/igphotos', ensureAuthenticatedInstagram, function (req, res) {
     }
   });
 });
-//Define the redirect here, ensures authenticated.
+//Define the redirect here: this is where res gets spit out
+//, ensures authenticated.
+//Mediacounts is a misnomer; this holds all of a user's data
 app.get('/igMediaCounts', ensureAuthenticatedInstagram, function (req, res) {
   var query = models.User.where({
     ig_id: req.user.ig_id
