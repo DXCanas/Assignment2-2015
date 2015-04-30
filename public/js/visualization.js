@@ -107,11 +107,11 @@ d3.json('/igMediaCounts', function (error, data) {
     })
     .on('mouseout', tip.hide);
 
-    //sort the bars in orde from most to least.c
+    //sort the bars in order from least to greatest
     d3.select("button").on("click", function(){
       this.disabled = true;
       //if box is checked, sort by media
-      var scaleX_sorted = scaleX.domain(data.users.sort(function(a,b) {return b.counts.media - a.counts.media;})
+      var scaleX_sorted = scaleX.domain(data.users.sort(function(a,b) {return a.counts.media - b.counts.media;})
         .map(function(d) {return d.username; }));
       //make use of transition
 
