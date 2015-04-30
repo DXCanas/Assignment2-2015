@@ -23,7 +23,7 @@
         tooltip: {
           format: {
             title: function (d) {
-              return data.users[d].full_name;
+              return data.users[d].username;
             }
           }
         }
