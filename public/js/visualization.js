@@ -92,7 +92,24 @@ d3.json('/igMediaCounts', function (error, data) {
       return height - scaleY(d.counts.media);
     })
     .on('mouseover', function(d) {
-      tip.show(d)
+      tip.show(d.counts.media)
     })
     .on('mouseout', tip.hide);
+
+    //sort the bars in orde from most to least.c
+    d3.select("button").on("click", function(){
+      this.disabled = true;
+      //if box is checked, sort by media
+      var scaleX_sorted = scaleX.domain(data.users.sort(function(a,b) {return b.counts.media - a.counts.media;})
+        .map(function(d) {return d.username; }));
+      //make use of transition
+
+      var transition = svg.transition().duration(1500);
+      transition.selectAll(".bar")
+        .attr("x", function(d) {return scaleX(d.username); })
+
+        transition.select(".x.axis")
+          .call(xAxis)
+          .selectAll("text")
+          .style("text-anchor", "end")
 });
