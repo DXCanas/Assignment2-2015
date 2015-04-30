@@ -102,26 +102,35 @@ d3.json('/igMediaCounts', function (error, data) {
     /*this is where the tooltip magic happens- we're telling it to use
     the same data that calculates the height of each bar, but represent it
     as a number raw number rather than height for an infographic*/
-    .on('mouseover', function(d) {
+    .on('mouseover', function (d) {
       tip.show(d.counts.media)
     })
     .on('mouseout', tip.hide);
 
-    //sort the bars in orde from most to least.c
-    d3.select("button").on("click", function(){
-      this.disabled = true;
-      //if box is checked, sort by media
-      var scaleX_sorted = scaleX.domain(data.users.sort(function(a,b) {return b.counts.media - a.counts.media;})
-        .map(function(d) {return d.username; }));
-      //make use of transition
+  //sort the bars in order from most to least
+  d3.select("button").on("click", function () {
+    //disables the button after being clicked
+    this.disabled = true;
+    //if box is checked, sort by media
+    var scaleX_sorted = scaleX.domain(data.users.sort(function (a, b) {
+        /*don't know why this calculation works, but it looks like it's
+        setting the domain of the x axis to...0? What are a and b?*/
+        return b.counts.media - a.counts.media;
+      })
+      .map(function (d) {
+        return d.username;
+      }));
+    //make use of transition
 
-      var transition = svg.transition().duration(1500);
-      transition.selectAll(".bar")
-        .attr("x", function(d) {return scaleX(d.username); })
+    var transition = svg.transition().duration(1500);
+    transition.selectAll(".bar")
+      .attr("x", function (d) {
+        return scaleX(d.username);
+      })
 
-        transition.select(".x.axis")
-          .call(xAxis)
-          .selectAll("text")
-          .style("text-anchor", "end")
-    });
+    transition.select(".x.axis")
+      .call(xAxis)
+      .selectAll("text")
+      .style("text-anchor", "end")
+  });
 });
