@@ -112,4 +112,5 @@ d3.json('/igMediaCounts', function (error, data) {
           .call(xAxis)
           .selectAll("text")
           .style("text-anchor", "end")
+    });
 });
