@@ -26,6 +26,11 @@
               return data.users[d].username;
             }
           }
+        },
+        axis: {
+          x: {
+            show: false
+          }
         }
       });
     });
