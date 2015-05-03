@@ -18,7 +18,8 @@
           columns: [
             yCounts,
             yCounts2
-          ]
+          ],
+          type:'spline'
         },
         tooltip: {
           format: {
@@ -30,8 +31,7 @@
         axis: {
           x: {
             show: false
-          },
-        type:'spline'
+          }
         }
       });
     });
