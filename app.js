@@ -177,7 +177,7 @@ app.get('/igphotos', ensureAuthenticatedInstagram, function (req, res) {
       Instagram.users.liked_by_self({
         access_token: user.ig_access_token,
         complete: function (data) {
-          console.log(data);
+          //console.log(data);
           //Map will iterate through the returned data obj
           var imageArr = data.map(function (item) {
             //create temporary json object
@@ -214,16 +214,29 @@ app.get('/igMediaCounts', ensureAuthenticatedInstagram, function (req, res) {
           // an array of asynchronous functions
           var asyncTasks = [];
           var mediaCounts = [];
-
+          var userRecent = [];
           data.forEach(function (item) {
             asyncTasks.push(function (callback) {
-              // asynchronous function!
-              //where the hell is this endpoint? Where is this being pushed?
+              //grab the people you follow's info
               Instagram.users.info({
                 user_id: item.id,
                 access_token: user.ig_access_token,
                 complete: function (data) {
                   mediaCounts.push(data);
+                }
+              });
+              
+              //grab feed of this person that you're following
+              Instagram.users.recent({
+                user_id: item.id,
+                access_token: user.ig_access_token,
+                count: 1,
+                complete: function (data) {
+                  var i = 0;
+                  var user;
+                  data.map(function(innerArray) { 
+                    userRecent.push(innerArray);
+                  });
                   callback();
                 }
               });
@@ -236,7 +249,8 @@ app.get('/igMediaCounts', ensureAuthenticatedInstagram, function (req, res) {
             // All tasks are done now
             if (err) return err;
             return res.json({
-              users: mediaCounts
+              users: mediaCounts,
+              userRecent: userRecent
             });
           });
         }
@@ -249,6 +263,9 @@ app.get('/visualization', ensureAuthenticatedInstagram, function (req, res) {
   res.render('visualization');
 });
 
+app.get('/customd3visualization', ensureAuthenticatedInstagram, function (req, res) {
+  res.render('customd3visualization');
+});
 
 app.get('/c3visualization', ensureAuthenticatedInstagram, function (req, res) {
   res.render('c3visualization');
