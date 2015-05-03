@@ -30,7 +30,8 @@
         axis: {
           x: {
             show: false
-          }
+          },
+        type:'spline'
         }
       });
     });
