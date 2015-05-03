@@ -1,5 +1,5 @@
-var bleed = 100,
-  width = 960,
+var bleed = 10,
+  width = 1024,
   height = 760;
 
 var pack = d3.layout.pack()
@@ -17,7 +17,7 @@ var svg = d3.select("body").append("svg")
   kind of object is because of the way d3-tip defined the function. you
   can find this in d3-tip.js in public/js. It's linked in
   views/layouts/layout.handlebars */
-var tip = d3.tip().attr('class', 'd3-tip').html(function (d) {
+var tip = d3.tip().direction('e').attr('class', 'd3-tip').html(function (d) {
   return d;
 });
 /*This is where the tip is initialized in the scope of our chart
