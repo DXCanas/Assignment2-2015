@@ -113,7 +113,7 @@ d3.json('/igMediaCounts', function (error, data) {
     this.disabled = true;
     //if box is checked, sort by media
     var scaleX_sorted = scaleX.domain(data.users.sort(function (a, b) {
-        return a.counts.media - b.counts.media;
+        return b.counts.media - a.counts.media;
       })
       .map(function (d) {
         return d.username;
