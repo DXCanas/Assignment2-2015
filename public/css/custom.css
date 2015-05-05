@@ -82,3 +82,16 @@ body{
 body{
   height: 100%;
 }
+
+#accountlink{
+
+}
+#c3vis{
+  background-color: forestgreen;
+}
+#d3vis{
+  background-color:blue;
+}
+#newd3vis{
+  background-color: deepskyblue;
+}
