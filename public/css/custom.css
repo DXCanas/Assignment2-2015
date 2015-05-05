@@ -87,11 +87,11 @@ body{
 
 }
 #c3vis{
-  background-color: forestgreen;
+  background-color: rgba(74,161,74,.3);
 }
 #d3vis{
-  background-color:blue;
+  background-color:rgb(54,121,179,.3);
 }
 #newd3vis{
-  background-color: deepskyblue;
+  background-color: rgba(63,180,215,.3);
 }
