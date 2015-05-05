@@ -1,3 +1,9 @@
+$('li').removeClass('active');
+  $('#newd3vis').addClass('active');
+  $(window).load(function() {
+    $(".loader").delay(1000).fadeOut("slow");
+  });
+
 var bleed = 10,
   width = 1024,
   height = 760;
@@ -7,7 +13,7 @@ var pack = d3.layout.pack()
   .size([width, height + bleed * 2])
   .padding(2);
 
-var svg = d3.select("body").append("svg")
+var svg = d3.select("#chart").append("svg")
   .attr("width", width)
   .attr("height", height)
   .append("g")
@@ -45,7 +51,7 @@ d3.json('/igMediaCounts', function (error, json) {
       return d.r;
     })
     .on('mouseover', function (d) {
-      tip.show(d.name +'<br /><img src="'+d.profilePic+'">');
+      tip.show('<center>'+d.name+'</center>'+'<br /><img src="'+d.latestPic+'">'+'<br /><center>'+d.value+' Likes</center>');
     })
     .on('mouseout', tip.hide);
 
@@ -72,7 +78,7 @@ function flatten(root) {
     userAndLikes.push({
       name: innerArray.user.username,
       value: innerArray.likes.count,
-      profilePic: innerArray.user.profile_picture
+      latestPic: innerArray.images.low_resolution.url
     });
   });
 

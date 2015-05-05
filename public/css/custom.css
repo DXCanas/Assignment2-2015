@@ -1,3 +1,7 @@
+*{
+  font-family: quicksand;
+}
+
 body{
   background-image: url(../images/confectionary/confectionary.png);
   background-repeat: repeat;
@@ -8,10 +12,11 @@ body{
   line-height: 1;
   font-weight: bold;
   padding: 12px;
-  background: rgba(0, 0, 0, 0.8);
-  color: #fff;
-  border-radius: 2px;
+  background: rgba(200, 230, 255, 0.8);
+  color: black;
+  border-radius: 15px;
   pointer-events: none;
+  z-index: 3000;
 }
 
 /* Creates a small triangle extender for the tooltip */
@@ -21,7 +26,7 @@ body{
   font-size: 10px;
   width: 100%;
   line-height: 1;
-  color: rgba(0, 0, 0, 0.8);
+  color: rgba(200, 230, 255, 0.8);
   position: absolute;
   pointer-events: none;
 }
@@ -60,3 +65,33 @@ body{
   left: 100%;
 }
 /********************End Tooltip Styles*****************************/
+
+.loader{
+  width: 300px;
+}
+
+.title{
+  background-color: white;
+  box-shadow: 3px 3px 3px gray;
+  text-align: center;
+}
+.chart{
+  background-color: rgba(255,255,255,.4);
+  padding:3em;
+}
+body{
+  height: 100%;
+}
+
+#accountlink{
+
+}
+#c3vis{
+  background-color: rgba(74,161,74,.3);
+}
+#d3vis{
+  background-color:rgba(54,121,179,.3);
+}
+#newd3vis{
+  background-color: rgba(63,180,215,.3);
+}

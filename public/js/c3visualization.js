@@ -1,4 +1,9 @@
 (function() {
+  $('li').removeClass('active');
+  $('#c3vis').addClass('active');
+  $(window).load(function() {
+    $(".loader").delay(1000).fadeOut("slow");
+  });
   $.getJSON( '/igMediaCounts')
     .done(function( data ) {
       var yCounts = data.users.map(function(item){

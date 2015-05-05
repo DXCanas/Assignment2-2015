@@ -1,6 +1,7 @@
 COGS 121 Assignment 2 - Spring 2015
 
-David Canas A10750333 Joshua Miller A10517355
+David Canas A10750333
+Joshua Miller A10517355
 
 Added loading animation to show the system status of all the graph pages. (Principle: Feedback)
 
