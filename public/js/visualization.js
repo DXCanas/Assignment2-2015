@@ -1,4 +1,9 @@
 /*This is where the D# Visualization is defined*/
+$('li').removeClass('active');
+  $('#d3vis').addClass('active');
+  $(window).load(function() {
+    $(".loader").delay(3000).fadeOut("slow");
+  });
 
 var margin = {
   top: 20,
@@ -108,7 +113,7 @@ d3.json('/igMediaCounts', function (error, data) {
     .on('mouseout', tip.hide);
 
   //sort the bars in order from least to greatest
-  d3.select("button").on("click", function () {
+  d3.select("#clicktosort").on("click", function () {
     //disables the button after being clicked
     this.disabled = true;
     //if box is checked, sort by media
