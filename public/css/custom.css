@@ -1,3 +1,7 @@
+*{
+  font-family: quicksand;
+}
+
 body{
   background-image: url(../images/confectionary/confectionary.png);
   background-repeat: repeat;
