@@ -61,3 +61,13 @@ body{
   left: 100%;
 }
 /********************End Tooltip Styles*****************************/
+
+.title{
+  background-color: white;
+  box-shadow: 3px 3px 3px gray;
+  text-align: center;
+}
+.chart{
+  background-color: rgba(255,255,255,.4);
+  padding:3em;
+}
