@@ -1,7 +1,7 @@
 $('li').removeClass('active');
   $('#newd3vis').addClass('active');
   $(window).load(function() {
-    $(".loader").delay(2000).fadeOut("slow");
+    $(".loader").delay(1000).fadeOut("slow");
   });
 
 var bleed = 10,

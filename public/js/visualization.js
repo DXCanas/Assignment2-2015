@@ -2,7 +2,7 @@
 $('li').removeClass('active');
   $('#d3vis').addClass('active');
   $(window).load(function() {
-    $(".loader").delay(3000).fadeOut("slow");
+    $(".loader").delay(1000).fadeOut("slow");
   });
 
 var margin = {

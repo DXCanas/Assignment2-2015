@@ -2,7 +2,7 @@
   $('li').removeClass('active');
   $('#c3vis').addClass('active');
   $(window).load(function() {
-    $(".loader").delay(3000).fadeOut("slow");
+    $(".loader").delay(1000).fadeOut("slow");
   });
   $.getJSON( '/igMediaCounts')
     .done(function( data ) {
